@@ -88,17 +88,34 @@ bool checkCol(int value, int index, struct Node sudoku[MAX_LENGTH]){
 
 bool checkBox(int value, int index, struct Node sudoku[MAX_LENGTH]){
 
-    if(value > 9 || value < 0 || index > MAX_LENGTH-1 || index < 0){
+    int box_size = 9;
+    int box_edge = 3;
+    if(box_size > 9 || value < 0 || index > MAX_LENGTH-1 || index < 0){
         fprintf(stderr, "Invalid potential value.\n");
         exit(EXIT_FAILURE);
-    }  
-    return false;
+    }
+    int row_position = index % box_size;
+    int col_position = index / box_size;
+    int box_row_start = (row_position / box_edge)*box_edge;
+    int box_col_start = (col_position / box_edge)*box_edge;
+    int start = (box_col_start*box_size)+box_row_start;
+
+    for(int i = start; i<start+(box_size*box_edge); i+=box_size){
+        int current_edge = i + box_edge;
+        for(int j = i; j<current_edge; j++){
+            printf("%d ", sudoku[j].value);
+            if(sudoku[j].value ==  value)
+            return false;
+        }
+        printf("\n");
+    }
+    return true;
 
 }
 
 void solve(struct Node sudoku[MAX_LENGTH]){
 
-    if(checkCol(1, 7, sudoku) == false){
+    if(checkBox(4, 40, sudoku) == false){
         printf("fuck\n");
     } else {
         printf("shit\n");

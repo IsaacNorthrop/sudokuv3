@@ -11,19 +11,6 @@ struct Node
     bool isEdit;
 };
 
-struct Node *initNode(int value, bool isEdit)
-{
-    struct Node *new = (struct Node *)malloc(sizeof(struct Node));
-    if (new == NULL)
-    {
-        fprintf(stderr, "Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    new->value = value;
-    new->isEdit = isEdit;
-    return new;
-}
-
 void getArray(char *puzzle, struct Node sudoku[MAX_LENGTH])
 {
     for (int i = 0; i < MAX_LENGTH; i++)
@@ -32,12 +19,12 @@ void getArray(char *puzzle, struct Node sudoku[MAX_LENGTH])
         if (val == 0)
         {
             sudoku[i].value = val;
-            sudoku[i].isEdit = false;
+            sudoku[i].isEdit = true;
         }
         else
         {
             sudoku[i].value = val;
-            sudoku[i].isEdit = true;
+            sudoku[i].isEdit = false;
         }
     }
 }
@@ -60,7 +47,7 @@ bool checkRow(int value, int index, struct Node sudoku[MAX_LENGTH]){
         exit(EXIT_FAILURE);
     }    
     int start = (index / row_length)*row_length;
-    printf("start %d\n", start);
+    // printf("start %d\n", start);
     for(int i = start; i<start+row_length-1; i++){
         if(sudoku[i].value ==  value)
             return false;
@@ -103,11 +90,11 @@ bool checkBox(int value, int index, struct Node sudoku[MAX_LENGTH]){
     for(int i = start; i<start+(box_size*box_edge); i+=box_size){
         int current_edge = i + box_edge;
         for(int j = i; j<current_edge; j++){
-            printf("%d ", sudoku[j].value);
+            // printf("%d ", sudoku[j].value);
             if(sudoku[j].value ==  value)
             return false;
         }
-        printf("\n");
+        // printf("\n");
     }
     return true;
 
@@ -115,13 +102,38 @@ bool checkBox(int value, int index, struct Node sudoku[MAX_LENGTH]){
 
 void solve(struct Node sudoku[MAX_LENGTH]){
 
-    if(checkBox(4, 40, sudoku) == false){
-        printf("fuck\n");
-    } else {
-        printf("shit\n");
+    int max_value = 9;
+    for(int i = 0; i<MAX_LENGTH; i++){
+        printf("index %d value %d\n", i, sudoku[i].value);
+        if(i < 0){
+            fprintf(stderr, "Puzzle is not solvable.\n");
+            exit(EXIT_FAILURE);
+        }
+        if(sudoku[i].isEdit){
+            bool value_found = false;
+            if(sudoku[i].value == 0)
+                sudoku[i].value = 1;
+            for(int j = sudoku[i].value; j<=max_value; j++){
+                if(checkRow(j, i, sudoku) && checkCol(j, i, sudoku) && checkBox(j, i, sudoku)){
+                    sudoku[i].value = j;
+                    value_found = true;
+                    break;
+                }
+            }
+            if(!value_found){
+                sudoku[i].value = 0;
+                i--;
+                while(!sudoku[i].isEdit){
+                    if(i < 0){
+                        fprintf(stderr, "Puzzle is not solvable.\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    i--; 
+                }
+                sudoku[i].value++;
+            }
+        }
     }
-    //checkCol();
-    //checkBox();
 
 }
 
@@ -146,6 +158,8 @@ int main()
     printf("Initial Puzzle:\n");
     printSudoku(sudoku);
     solve(sudoku);
+    printf("Solved Puzzle:\n");
+    printSudoku(sudoku);
 
     return 0;
 }

@@ -52,6 +52,62 @@ void printSudoku(struct Node sudoku[MAX_LENGTH])
     }
 }
 
+bool checkRow(int value, int index, struct Node sudoku[MAX_LENGTH]){
+
+    int row_length = 9;
+    if(value > row_length || value < 0 || index > MAX_LENGTH-1 || index < 0){
+        fprintf(stderr, "Invalid potential value.\n");
+        exit(EXIT_FAILURE);
+    }    
+    int start = (index / row_length)*row_length;
+    printf("start %d\n", start);
+    for(int i = start; i<start+row_length-1; i++){
+        if(sudoku[i].value ==  value)
+            return false;
+    }
+    return true;
+
+}
+
+bool checkCol(int value, int index, struct Node sudoku[MAX_LENGTH]){
+
+    int col_length = 9;
+    if(value > col_length || value < 0 || index > MAX_LENGTH-1 || index < 0){
+        fprintf(stderr, "Invalid potential value.\n");
+        exit(EXIT_FAILURE);
+    }
+    int col_position = index % col_length;
+    for(int i = col_position; i<MAX_LENGTH; i+=col_length){
+        if(sudoku[i].value ==  value)
+        return false;
+    }
+
+    return true;
+
+}
+
+bool checkBox(int value, int index, struct Node sudoku[MAX_LENGTH]){
+
+    if(value > 9 || value < 0 || index > MAX_LENGTH-1 || index < 0){
+        fprintf(stderr, "Invalid potential value.\n");
+        exit(EXIT_FAILURE);
+    }  
+    return false;
+
+}
+
+void solve(struct Node sudoku[MAX_LENGTH]){
+
+    if(checkCol(1, 7, sudoku) == false){
+        printf("fuck\n");
+    } else {
+        printf("shit\n");
+    }
+    //checkCol();
+    //checkBox();
+
+}
+
 int main()
 {
 
@@ -70,7 +126,9 @@ int main()
 
     struct Node sudoku[MAX_LENGTH];
     getArray(puzzle, sudoku);
+    printf("Initial Puzzle:\n");
     printSudoku(sudoku);
+    solve(sudoku);
 
     return 0;
 }

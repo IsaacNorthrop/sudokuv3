@@ -15,8 +15,8 @@ struct sudoku
 int main()
 {
 
-    const char *filename = "ex.csv";
-    const char *new_file = "new.csv";
+    const char *filename = "sudoku-3m.csv";
+    const char *new_file = "right.csv";
 
     FILE *file = fopen(filename, "r");
     FILE *new = fopen(new_file, "a");

@@ -120,8 +120,8 @@ void checkSudoku(struct Node sudoku[MAX_LENGTH])
     {
         if (!sudoku[i].isEdit)
         {
-            if (!checkRow(sudoku[i].value, i, sudoku) || 
-                !checkCol(sudoku[i].value, i, sudoku) || 
+            if (!checkRow(sudoku[i].value, i, sudoku) ||
+                !checkCol(sudoku[i].value, i, sudoku) ||
                 !checkBox(sudoku[i].value, i, sudoku))
             {
                 fprintf(stderr, "Entered sudoku is invalid.\n");
@@ -181,17 +181,28 @@ void solve(struct Node sudoku[MAX_LENGTH])
     }
 }
 
-void match(struct Node sudoku[MAX_LENGTH], char solution[MAX_LENGTH]){
+void match(struct Node sudoku[MAX_LENGTH], char solution[MAX_LENGTH], int test_count)
+{
+    printf("%s\n", solution);
 
+    for(int i = 0; i<MAX_LENGTH; i++){
 
+        if(sudoku[i].value != solution[i]){
+            printf("Test %d failed.\n", test_count);
+            exit(0);
+        }
+
+    }
+
+    printf("Test %d passed.\n", test_count);
 
 }
 
 int main()
 {
 
-    char puzzle[MAX_LENGTH+1];
-    char solution[MAX_LENGTH+1];
+    char puzzle[MAX_LENGTH + 1];
+    char solution[MAX_LENGTH + 1];
 
     const char *filename = "test.txt";
 
@@ -203,35 +214,44 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-   while (fgets(puzzle, sizeof(puzzle), file) != NULL) {
-        //printf("%s", puzzle);
+    int test_count = 1;
+
+    while (fgets(puzzle, sizeof(puzzle), file) != NULL)
+    {
         fgets(solution, sizeof(solution), file);
-        //printf("%s", solution);
+        printf("%s\n", solution);
+        struct Node sudoku[MAX_LENGTH];
+        getArray(puzzle, sudoku);
+        printSudoku(sudoku);
+        checkSudoku(sudoku);
+        solve(sudoku);
+        match(sudoku, solution, test_count);
+        test_count++;
+
     }
 
-    //printf("Enter the puzzle string:\n");
-    //scanf("%81s", puzzle);
-    // if (strlen(puzzle) != 81)
-    // {
-    //     fprintf(stderr, "Invalid puzzle string length.\n");
-    //     exit(EXIT_FAILURE);
-    // }
-    // else
-    // {
-    //     printf("You entered: %s\n", puzzle);
-    // }
+    // printf("Enter the puzzle string:\n");
+    // scanf("%81s", puzzle);
+    //  if (strlen(puzzle) != 81)
+    //  {
+    //      fprintf(stderr, "Invalid puzzle string length.\n");
+    //      exit(EXIT_FAILURE);
+    //  }
+    //  else
+    //  {
+    //      printf("You entered: %s\n", puzzle);
+    //  }
 
-    struct Node sudoku[MAX_LENGTH];
-    struct Node sudoku_solution[MAX_LENGTH];
-    getArray(puzzle, sudoku);
-    printSudoku(sudoku);
-    checkSudoku(sudoku);
-    //printf("Initial Puzzle:\n");
-    //printSudoku(sudoku);
-    solve(sudoku);
-    //printf("Solved Puzzle:\n");
-    //printSudoku(sudoku);
-    match(sudoku, solution);
+    // struct Node sudoku[MAX_LENGTH];
+    // struct Node sudoku_solution[MAX_LENGTH];
+    // getArray(puzzle, sudoku);
+    // printSudoku(sudoku);
+    // checkSudoku(sudoku);
+    // // printf("Initial Puzzle:\n");
+    // // printSudoku(sudoku);
+    // solve(sudoku);
+    // // printf("Solved Puzzle:\n");
+    // // printSudoku(sudoku);
 
     return 0;
 }

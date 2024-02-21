@@ -3,8 +3,8 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 
-TARGET = sudoku
-SRC = sudoku.c
+TARGET = conv
+SRC = conv.c
 
 all: $(TARGET)
 

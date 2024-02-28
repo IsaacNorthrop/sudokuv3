@@ -41,7 +41,7 @@ void printSudoku(struct Node sudoku[MAX_LENGTH])
 
 bool checkRow(int value, int index, struct Node sudoku[MAX_LENGTH])
 {
-
+    //printf("check row value: %d\n",value);
     int row_length = 9;
     if (value > row_length || value < 0 || index > MAX_LENGTH - 1 || index < 0)
     {
@@ -49,8 +49,9 @@ bool checkRow(int value, int index, struct Node sudoku[MAX_LENGTH])
         exit(EXIT_FAILURE);
     }
     int start = (index / row_length) * row_length;
-    // printf("start %d\n", start);
-    for (int i = start; i < start + row_length - 1; i++)
+    //printf("start %d\n", start);
+    //printf("end %d\n", start + row_length - 1);
+    for (int i = start; i < start + row_length; i++)
     {
         if (i == index)
             continue;
@@ -137,8 +138,8 @@ void solve(struct Node sudoku[MAX_LENGTH])
     int max_value = 9;
     for (int i = 0; i < MAX_LENGTH; i++)
     {
-        // printf("start: index %d value %d\n", i, sudoku[i].value);
-        // printSudoku(sudoku);
+        //printf("start: index %d value %d\n", i, sudoku[i].value);
+        //printSudoku(sudoku);
         if (i < 0)
         {
             fprintf(stderr, "Puzzle is not solvable.\n");
@@ -146,14 +147,14 @@ void solve(struct Node sudoku[MAX_LENGTH])
         }
         if (sudoku[i].isEdit)
         {
-            // printf("isEdit: index %d value %d\n", i, sudoku[i].value);
+            //printf("isEdit: index %d value %d\n", i, sudoku[i].value);
             bool value_found = false;
             if (sudoku[i].value == 0)
                 sudoku[i].value = 1;
             for (int j = sudoku[i].value; j <= max_value; j++)
             {
-                // printf("Incrementing: index %d value %d\n", i, j);
-                // printf("checkRow %s checkCol %s checkBox %s\n", checkRow(j, i, sudoku) ? "true" : "false", checkCol(j, i, sudoku) ? "true" : "false", checkBox(j, i, sudoku) ? "true" : "false");
+                //printf("Incrementing: index %d value %d\n", i, j);
+                //printf("checkRow %s checkCol %s checkBox %s\n", checkRow(j, i, sudoku) ? "true" : "false", checkCol(j, i, sudoku) ? "true" : "false", checkBox(j, i, sudoku) ? "true" : "false");
                 if (checkRow(j, i, sudoku) && checkCol(j, i, sudoku) && checkBox(j, i, sudoku))
                 {
                     sudoku[i].value = j;
@@ -181,13 +182,14 @@ void solve(struct Node sudoku[MAX_LENGTH])
     }
 }
 
-void match(struct Node sudoku[MAX_LENGTH], char solution[MAX_LENGTH], int test_count)
+void match(struct Node sudoku[MAX_LENGTH], char *solution, int test_count)
 {
-    printf("%s\n", solution);
 
     for(int i = 0; i<MAX_LENGTH; i++){
 
-        if(sudoku[i].value != solution[i]){
+        printf("%d-%c\n", sudoku[i].value, solution[i]);
+
+        if(sudoku[i].value != solution[i] - '0'){
             printf("Test %d failed.\n", test_count);
             exit(0);
         }
@@ -216,15 +218,19 @@ int main()
 
     int test_count = 1;
 
-    while (fgets(puzzle, sizeof(puzzle), file) != NULL)
+    while (fgets(puzzle, sizeof(puzzle), file) != NULL
+    && fgets(solution, sizeof(solution), file) != NULL
+    && fgets(solution, sizeof(solution), file) != NULL)
     {
-        fgets(solution, sizeof(solution), file);
-        printf("%s\n", solution);
+        // printf("%s\n", puzzle);
+        // printf("%s\n", solution);
         struct Node sudoku[MAX_LENGTH];
         getArray(puzzle, sudoku);
-        printSudoku(sudoku);
+        //printSudoku(sudoku);
         checkSudoku(sudoku);
         solve(sudoku);
+        printSudoku(sudoku);
+        printf("%s\n", solution);
         match(sudoku, solution, test_count);
         test_count++;
 

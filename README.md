@@ -13,7 +13,7 @@ Command line tool that solves sudoku puzzles.
     ```bash
     ./sudoku
 
-4. When prompted, enter a valid sudoku puzzle string, for example:
+4. When prompted, enter a valid 81 character numeric sudoku puzzle string, for example:
     ```bash
     Enter the puzzle string:
     000260701680070090190004500820100040004602900050003028009300074040050036703018000

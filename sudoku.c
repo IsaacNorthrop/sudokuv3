@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2024 Isaac Northrop
+ * Author: Isaac Northrop - isaac.northrop88@gmail.com
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +54,6 @@ bool checkRow(int value, int index, struct Node sudoku[MAX_LENGTH])
         exit(EXIT_FAILURE);
     }
     int start = (index / row_length) * row_length;
-    // printf("start %d\n", start);
     for (int i = start; i < start + row_length - 1; i++)
     {
         if (i == index)
@@ -102,13 +106,11 @@ bool checkBox(int value, int index, struct Node sudoku[MAX_LENGTH])
         int current_edge = i + box_edge;
         for (int j = i; j < current_edge; j++)
         {
-            // printf("%d ", sudoku[j].value);
             if (j == index)
                 continue;
             if (sudoku[j].value == value)
                 return false;
         }
-        // printf("\n");
     }
     return true;
 }
@@ -137,8 +139,6 @@ void solve(struct Node sudoku[MAX_LENGTH])
     int max_value = 9;
     for (int i = 0; i < MAX_LENGTH; i++)
     {
-        // printf("start: index %d value %d\n", i, sudoku[i].value);
-        // printSudoku(sudoku);
         if (i < 0)
         {
             fprintf(stderr, "Puzzle is not solvable.\n");
@@ -146,14 +146,11 @@ void solve(struct Node sudoku[MAX_LENGTH])
         }
         if (sudoku[i].isEdit)
         {
-            // printf("isEdit: index %d value %d\n", i, sudoku[i].value);
             bool value_found = false;
             if (sudoku[i].value == 0)
                 sudoku[i].value = 1;
             for (int j = sudoku[i].value; j <= max_value; j++)
             {
-                // printf("Incrementing: index %d value %d\n", i, j);
-                // printf("checkRow %s checkCol %s checkBox %s\n", checkRow(j, i, sudoku) ? "true" : "false", checkCol(j, i, sudoku) ? "true" : "false", checkBox(j, i, sudoku) ? "true" : "false");
                 if (checkRow(j, i, sudoku) && checkCol(j, i, sudoku) && checkBox(j, i, sudoku))
                 {
                     sudoku[i].value = j;
